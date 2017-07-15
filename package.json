@@ -2,7 +2,7 @@
   "name": "warsawjs-workshop-8-social-network",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "test": "mocha app/tests"
   },
@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/Sajlent/warsawjs-workshop-8-social-network#readme",
   "dependencies": {
+    "app-compositor": "^0.4.0",
     "bcrypt": "^1.0.2",
     "esdf": "^0.2.1",
     "mocha": "^3.4.2"

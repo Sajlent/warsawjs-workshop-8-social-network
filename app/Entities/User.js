@@ -2,6 +2,7 @@
 
 const esdf = require('esdf');
 const bcrypt = require('bcrypt');
+const appCompositor = require('app-compositor');
 
 class User extends esdf.core.EventSourcedAggregate {
     constructor() {
