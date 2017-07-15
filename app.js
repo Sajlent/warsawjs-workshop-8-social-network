@@ -1,8 +1,17 @@
 'use strict';
 
+require('dotenv').config();
+
 const modules = [
     require('./app/Modules/sink'),
-    require('./app/Modules/repository')
+    require('./app/Modules/streamer'),
+    require('./app/Modules/publisher'),
+    require('./app/Modules/subscriber'),
+    require('./app/Modules/repository'),
+    require('./app/Modules/config'),
+    require('./app/Modules/projectionDB'),
+    require('./app/Modules/projectionBuilder'),
+    require('./app/Modules/services')
 ];
 
 // function db() {
@@ -16,13 +25,11 @@ const modules = [
 
 const CompositionManager = require('app-compositor').CompositionManager;
 const app = new CompositionManager;
-app.runModules(modules).done(async function ({ repository }) {
-    const User = require('./app/Entities/User');
-    await repository.invoke(User, 'aaa', async function (user) {
-        await user.register({ name: 'Agata', email: 'test@test.pl', password: 'test' });
-        console.log('isRegistered: %s', user.isRegistered());
+app.runModules(modules).done(async function ({ streamer, subscriber, services }) {
+    streamer.start();
+    subscriber.queue('eventLogger').bind('*.*').listen(function ({ event, commit }) {
+         console.log('* %s.%s: %j', commit.aggregateType, event.eventType, event.eventPayload);
     });
-    repository.invoke(User, 'aaa', async function (user) {
-        console.log('is still registered: %s', user.isRegistered());
-    });
+    const registerUser = services.service('registerUser');
+    registerUser({ userID: '222', name: 'Agata', email: 'test2@test.pl', password: 'test2' });
 });
